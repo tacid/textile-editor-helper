@@ -618,16 +618,24 @@ TextileEditor.Methods = {
 	
       // support linkage button
       if (button.id=='linkage') {
-        var link_text = prompt('Link Text:','');
-        var link_address = prompt('Link address:','http://');
+        link_text = prompt('Link Text:','');
+        link_address = prompt('Link address:','http://');
         finalText =   beginningText +
                       '"' + 
                       link_text
                       + '":'
-                      + link_address
+                      + link_address + ' '
                       + followupText;
-	    cursorPos = startPos + 1; // add 1 because of tag?
-       } else {
+	    cursorPos = startPos + 4 + link_text.length + link_address.length; // 4 is for tag start, end, the :, and a space
+       } else if (button.id=='image') {
+	     image_url = prompt('Image URL:','http://');
+	     finalText =   beginningText +
+                      '!' + 
+                      image_url
+                      + '!'
+                      + followupText;
+	     cursorPos = startPos + 2 + image_url.length; // 2 is for tag start, tag end
+	   }else {
 	  
      	  var buttonStart = '';
 	      var buttonEnd = '';
