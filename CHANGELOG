@@ -1,3 +1,9 @@
+== v0.2.3 ==
+* Added an image button that prompts user for image URL
+
+== v0.2.2 ==
+* Added a hyperlink button that will prompt a user for link text and URL
+
 == v0.2.1 ==
 * Added support for using textile_editor_initialize from an AJAX request
 

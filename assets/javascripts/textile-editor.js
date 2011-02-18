@@ -446,7 +446,6 @@ TextileEditor.Methods = {
         }
         // must be a block modification e.g. p>. to p<.
         else {
-
           // if this is a block modification/addition
           if (button.tagStart.match(/(h1|h2|h3|h4|h5|h6|bq|p)/g)) { 
             if (tagPartBlock == '') {
@@ -568,12 +567,11 @@ TextileEditor.Methods = {
             mplier = mplier + matches.length;
           }
           posDiffPos = insertTag.length + 2 + (mplier*4);
-        }       
+        }      
       }
 
       // swap in and out the simple tags around a selection like bold
       else {
-
         mplier = 1; // the multiplier for the tag length
         re_start = new RegExp('^\\' + button.tagStart,'g');
         re_end =  new RegExp('\\' + button.tagEnd + '$','g');
@@ -590,6 +588,13 @@ TextileEditor.Methods = {
           posDiffNeg = button.tagStart.length*mplier + button.tagEnd.length*mplier;
         }
         else {
+	      // linkage hax
+	      if (button.id=='linkage') {
+            linkage_url = prompt('Link URL','http://');
+            selectedText = selectedText +
+                           '":' +
+                           linkage_url;
+          }
           finalText = beginningText
                   + newlineStart
                         + button.tagStart
@@ -610,48 +615,73 @@ TextileEditor.Methods = {
 
     // just swap in and out single values, e.g. someone clicks b they'll get a *
     else {
-      var buttonStart = '';
-      var buttonEnd = '';
-      var re_p = new RegExp('(\\<|\\>|\\=|\\<\\>|\\(|\\))','g');
-      var re_h = new RegExp('^(h1|h2|h3|h4|h5|h6|p|bq)','g');
-      if (!this.checkOpenTags(button) || button.tagEnd == '') { // opening tag
-
-        if (button.tagStart.match(re_h)) {
-          buttonStart = button.tagStart + '. ';
-        }
-        else {
-          buttonStart = button.tagStart;
-        }
-        if (button.tagStart.match(re_p)) { // make sure that invoking block modifiers don't do anything
-          finalText = beginningText 
-                     + followupText;
-          cursorPos = startPos;
-        }
-        else {
-          finalText = beginningText 
-                      + buttonStart
+	
+      // support linkage button
+      if (button.id=='linkage') {
+        link_text = prompt('Link Text:','');
+        link_address = prompt('Link address:','http://');
+        finalText =   beginningText +
+                      '"' + 
+                      link_text
+                      + '":'
+                      + link_address + ' '
                       + followupText;
-          this.addTag(button);
-          cursorPos = startPos + buttonStart.length;
-        }
+	    cursorPos = startPos + 4 + link_text.length + link_address.length; // 4 is for tag start, end, the :, and a space
+       } else if (button.id=='image') {
+	     image_url = prompt('Image URL:','http://');
+	     finalText =   beginningText +
+                      '!' + 
+                      image_url
+                      + '!'
+                      + followupText;
+	     cursorPos = startPos + 2 + image_url.length; // 2 is for tag start, tag end
+	   }else {
+	  
+     	  var buttonStart = '';
+	      var buttonEnd = '';
+	      var re_p = new RegExp('(\\<|\\>|\\=|\\<\\>|\\(|\\))','g');
+	      var re_h = new RegExp('^(h1|h2|h3|h4|h5|h6|p|bq)','g');
 
-      }
-      else {  // closing tag
-        if (button.tagStart.match(re_p)) {
-          buttonEnd = '\n\n';
-        }
-        else if (button.tagStart.match(re_h)) {
-          buttonEnd = '\n\n';
-        }
-        else {
-          buttonEnd = button.tagEnd
-        }
-        finalText = beginningText 
-                    + button.tagEnd
-                    + followupText;
-        this.removeTag(button);
-        cursorPos = startPos + button.tagEnd.length;
-      }
+	      if (!this.checkOpenTags(button) || button.tagEnd == '') { // opening tag
+
+	        if (button.tagStart.match(re_h)) {
+	          buttonStart = button.tagStart + '. ';
+	        }
+	        else {
+	          buttonStart = button.tagStart;
+	        }
+	        if (button.tagStart.match(re_p)) { // make sure that invoking block modifiers don't do anything
+	          finalText = beginningText 
+	                     + followupText;
+	          cursorPos = startPos;
+	        }
+	        else {
+		
+	          finalText = beginningText 
+	                      + buttonStart
+	                      + followupText;
+	          this.addTag(button);
+	          cursorPos = startPos + buttonStart.length;
+	        }
+
+	      }
+	      else {  // closing tag
+	        if (button.tagStart.match(re_p)) {
+	          buttonEnd = '\n\n';
+	        }
+	        else if (button.tagStart.match(re_h)) {
+	          buttonEnd = '\n\n';
+	        }
+	        else {
+	          buttonEnd = button.tagEnd
+	        }
+	        finalText = beginningText 
+	                    + button.tagEnd
+	                    + followupText;
+	        this.removeTag(button);
+	        cursorPos = startPos + button.tagEnd.length;
+	      }
+	  }
     }
 
     // set the appropriate DOM value with the final text

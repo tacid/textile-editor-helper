@@ -134,7 +134,7 @@ module ActionView
         # output << %q{TextileEditor.framework = '%s';} % options[:framework].to_s
         output << editor_buttons.join("\n") if editor_buttons.any?
         editor_ids.each do |editor_id, mode|
-          output << %q{TextileEditor.initialize('%s', '%s');} % [editor_id, mode || 'extended']
+          output << %q{TextileEditor.initialize('%s', '%s');} % [editor_id.gsub(/[^a-zA-Z0-9]+/, '_').sub(/_$/, ''), mode || 'extended']
         end
         output << '});' unless request.xhr?
 
