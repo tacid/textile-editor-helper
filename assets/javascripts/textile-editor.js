@@ -591,9 +591,12 @@ TextileEditor.Methods = {
 	      // linkage hax
 	      if (button.id=='linkage') {
             linkage_url = prompt('Link URL','http://');
-            selectedText = selectedText +
-                           '":' +
-                           linkage_url;
+            if (linkage_url!=null && linkage_url!="")
+            {
+              selectedText = selectedText +
+                             '":' +
+                             linkage_url;
+            }
           }
           finalText = beginningText
                   + newlineStart
@@ -619,22 +622,31 @@ TextileEditor.Methods = {
       // support linkage button
       if (button.id=='linkage') {
         link_text = prompt('Link Text:','');
-        link_address = prompt('Link address:','http://');
-        finalText =   beginningText +
-                      '"' + 
-                      link_text
-                      + '":'
-                      + link_address + ' '
-                      + followupText;
-	    cursorPos = startPos + 4 + link_text.length + link_address.length; // 4 is for tag start, end, the :, and a space
+        if(link_text!=null && link_text!="") {
+          link_address = prompt('Link address:','http://');
+          if(link_text!=null && link_address!=null &&
+             link_address!="" && link_text!="")
+            {
+              finalText =   beginningText +
+                        '"' +
+                        link_text
+                        + '":'
+                        + link_address + ' '
+                        + followupText;
+              cursorPos = startPos + 4 + link_text.length + link_address.length; // 4 is for tag start, end, the :, and a space
+            }
+          }
        } else if (button.id=='image') {
 	     image_url = prompt('Image URL:','http://');
-	     finalText =   beginningText +
-                      '!' + 
-                      image_url
-                      + '!'
-                      + followupText;
-	     cursorPos = startPos + 2 + image_url.length; // 2 is for tag start, tag end
+         if(image_url!=null && image_url!="")
+         {
+           finalText =   beginningText +
+                        '!' +
+                        image_url
+                        + '!'
+                        + followupText;
+           cursorPos = startPos + 2 + image_url.length; // 2 is for tag start, tag end
+         }
 	   }else {
 	  
      	  var buttonStart = '';
