@@ -1,5 +1,5 @@
 namespace :textile_editor_helper do
-  PLUGIN_ROOT = File.dirname(__FILE__) + '/..'
+  PLUGIN_ROOT = File.dirname(__FILE__) + '/../..'
   ASSET_FILES = Dir[PLUGIN_ROOT + '/assets/**/*'].select { |e| File.file?(e) }
   
   desc 'Installs required assets'
